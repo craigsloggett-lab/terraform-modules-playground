@@ -4,7 +4,7 @@ terraform {
 
     workspaces {
       project = "Modules"
-      name    = terraform-aws-s3-bucket
+      name    = "terraform-aws-s3-bucket"
     }
   }
 }

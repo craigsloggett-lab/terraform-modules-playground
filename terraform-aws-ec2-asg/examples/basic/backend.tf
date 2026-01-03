@@ -4,7 +4,7 @@ terraform {
 
     workspaces {
       project = "Modules"
-      name    = terraform-aws-ec2-asg
+      name    = "terraform-aws-ec2-asg"
     }
   }
 }

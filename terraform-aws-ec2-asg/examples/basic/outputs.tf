@@ -12,3 +12,8 @@ output "aws_availability_zones" {
   description = "The AWS availability zones (available) data source."
   value       = module.terraform_aws_ec2_asg.aws_availability_zones
 }
+
+output "aws_ami" {
+  description = "The details of the AMI image."
+  value       = module.terraform_aws_ec2_asg.aws_ami
+}
