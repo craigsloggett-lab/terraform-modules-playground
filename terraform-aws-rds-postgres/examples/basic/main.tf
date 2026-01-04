@@ -5,12 +5,24 @@ data "aws_vpc" "rds" {
   }
 }
 
+data "aws_subnets" "private" {
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.rds.id]
+  }
+
+  filter {
+    name   = "tag:Name"
+    values = ["*private*"]
+  }
+}
+
 module "terraform_aws_rds_postgres" {
   source = "../../"
 
   identifier = "tfe-postgres-db-001"
   vpc_id     = data.aws_vpc.rds.id
-  subnet_ids = var.database_subnet_ids
+  subnet_ids = data.aws_subnets.private.ids
 
   database_name = "terraform_enterprise"
   username      = "tfeadmin"
