@@ -65,7 +65,7 @@ No modules.
 | <a name="input_storage_throughput"></a> [storage\_throughput](#input\_storage\_throughput) | The storage throughput value for gp3 storage type (MiB/s). | `number` | `null` | no |
 | <a name="input_storage_type"></a> [storage\_type](#input\_storage\_type) | The storage type. Can be 'gp2', 'gp3', 'io1', or 'io2'. | `string` | `"gp3"` | no |
 | <a name="input_subnet_group_name"></a> [subnet\_group\_name](#input\_subnet\_group\_name) | Name of the DB subnet group. If not provided, defaults to '{identifier}-subnet-group'. | `string` | `null` | no |
-| <a name="input_subnet_ids"></a> [subnet\_ids](#input\_subnet\_ids) | List of subnet IDs for the DB subnet group. Should be private subnets across multiple AZs for high availability. | `list(string)` | n/a | yes |
+| <a name="input_subnet_ids"></a> [subnet\_ids](#input\_subnet\_ids) | List of subnet IDs for the database subnet group. Should be private subnets across multiple AZs for high availability. | `list(string)` | n/a | yes |
 | <a name="input_username"></a> [username](#input\_username) | Username for the DB user. Cannot be 'postgres' as it's reserved. | `string` | `"dbadmin"` | no |
 | <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | The id of the VPC where the RDS instance will be deployed. | `string` | n/a | yes |
 

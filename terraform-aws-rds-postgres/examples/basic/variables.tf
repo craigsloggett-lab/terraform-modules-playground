@@ -4,7 +4,7 @@ variable "vpc_name" {
 }
 
 variable "database_subnet_ids" {
-  description = "List of subnet IDs for the DB subnet group. Should be private subnets across multiple AZs for high availability."
+  description = "List of subnet IDs for the database subnet group."
   type        = list(string)
 
   validation {
