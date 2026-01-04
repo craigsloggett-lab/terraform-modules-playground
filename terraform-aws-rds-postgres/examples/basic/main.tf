@@ -24,7 +24,7 @@ module "terraform_aws_rds_postgres" {
   vpc_id     = data.aws_vpc.rds.id
   subnet_ids = data.aws_subnets.private.ids
 
-  database_name = "terraform_enterprise"
+  database_name = "tfe"
   username      = "tfeadmin"
 
   postgres_version        = "17.7"
