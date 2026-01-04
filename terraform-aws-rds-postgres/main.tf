@@ -75,6 +75,7 @@ resource "aws_db_instance" "this" {
 
   # Monitoring
   performance_insights_enabled          = var.performance_insights_enabled
+  performance_insights_mode             = "advanced"
   performance_insights_kms_key_id       = var.performance_insights_enabled ? data.aws_kms_key.rds.arn : null
   performance_insights_retention_period = var.performance_insights_enabled ? var.performance_insights_retention_period : null
   enabled_cloudwatch_logs_exports       = ["postgresql", "upgrade"]

@@ -50,13 +50,13 @@ variable "username" {
 # Optional Variables
 
 variable "postgres_version" {
-  description = "The version of PostgreSQL to use. Use format 'major.minor' (e.g., '16.4')."
+  description = "The version of PostgreSQL to use. Use format 'major.minor' (e.g., '16.8')."
   type        = string
-  default     = "18.1"
+  default     = "16.8"
 
   validation {
     condition     = can(regex("^[0-9]+\\.[0-9]+$", var.postgres_version))
-    error_message = "PostgreSQL version must be in format 'major.minor' (e.g., '16.4')."
+    error_message = "PostgreSQL version must be in format 'major.minor' (e.g., '16.8')."
   }
 }
 

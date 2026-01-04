@@ -1,3 +1,7 @@
+# AWS RDS PostgreSQL Terraform Module
+
+A Terraform module to deploy an RDS instance using the PostgreSQL engine.
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
@@ -57,7 +61,7 @@ No modules.
 | <a name="input_parameters"></a> [parameters](#input\_parameters) | A list of DB parameters to apply. Use this to customize PostgreSQL configuration. | <pre>list(object({<br/>    name  = string<br/>    value = string<br/>  }))</pre> | <pre>[<br/>  {<br/>    "name": "log_statement",<br/>    "value": "all"<br/>  },<br/>  {<br/>    "name": "log_min_duration_statement",<br/>    "value": "1000"<br/>  }<br/>]</pre> | no |
 | <a name="input_performance_insights_enabled"></a> [performance\_insights\_enabled](#input\_performance\_insights\_enabled) | Specifies whether Performance Insights are enabled. | `bool` | `true` | no |
 | <a name="input_performance_insights_retention_period"></a> [performance\_insights\_retention\_period](#input\_performance\_insights\_retention\_period) | The number of days to retain Performance Insights data. Valid values are 7, 31, 62, 93, 124, 155, 186, 217, 248, 279, 310, 341, 372, 403, 434, 465, 496, 527, 558, 589, 620, 651, 682, 713, 731. | `number` | `7` | no |
-| <a name="input_postgres_version"></a> [postgres\_version](#input\_postgres\_version) | The version of PostgreSQL to use. Use format 'major.minor' (e.g., '16.4'). | `string` | `"18.1"` | no |
+| <a name="input_postgres_version"></a> [postgres\_version](#input\_postgres\_version) | The version of PostgreSQL to use. Use format 'major.minor' (e.g., '16.8'). | `string` | `"16.8"` | no |
 | <a name="input_rds_kms_key_id"></a> [rds\_kms\_key\_id](#input\_rds\_kms\_key\_id) | The ARN for the KMS encryption key for RDS storage and Performance Insights. If not specified, uses the default aws/rds key. | `string` | `null` | no |
 | <a name="input_secrets_manager_kms_key_id"></a> [secrets\_manager\_kms\_key\_id](#input\_secrets\_manager\_kms\_key\_id) | The ARN for the KMS encryption key for Secrets Manager. If not specified, uses the default aws/secretsmanager key. | `string` | `null` | no |
 | <a name="input_security_group_name"></a> [security\_group\_name](#input\_security\_group\_name) | Name of the security group. If not provided, defaults to '{identifier}-sg'. | `string` | `null` | no |

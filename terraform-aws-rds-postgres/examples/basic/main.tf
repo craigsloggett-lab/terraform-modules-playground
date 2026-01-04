@@ -27,6 +27,7 @@ module "terraform_aws_rds_postgres" {
   database_name = "terraform_enterprise"
   username      = "tfeadmin"
 
+  postgres_version        = "17.7"
   allowed_cidr_blocks     = [data.aws_vpc.rds.cidr_block]
   backup_retention_period = 0
   deletion_protection     = false
