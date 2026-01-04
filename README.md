@@ -1,3 +1,3 @@
 # Terraform Modules Playground
 
-A place to develop multiple Terraform modules quickly.
+A collection of modules for us in the lab.
