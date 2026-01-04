@@ -193,10 +193,26 @@ variable "performance_insights_enabled" {
   default     = true
 }
 
+variable "database_insights_mode" {
+  description = "The monitoring type for Database Insights. Must be either 'standard' or 'advanced'."
+  type        = string
+  default     = "advanced"
+
+  validation {
+    condition     = contains(["standard", "advanced"], var.database_insights_mode)
+    error_message = "Database Insights mode must be either 'standard' or 'advanced'."
+  }
+
+  validation {
+    condition     = var.database_insights_mode != "advanced" || var.performance_insights_retention_period >= 465
+    error_message = "When Database Insights mode is 'advanced', Performance Insights retention period must be at least 465 days."
+  }
+}
+
 variable "performance_insights_retention_period" {
   description = "The number of days to retain Performance Insights data. Valid values are 7, 31, 62, 93, 124, 155, 186, 217, 248, 279, 310, 341, 372, 403, 434, 465, 496, 527, 558, 589, 620, 651, 682, 713, 731."
   type        = number
-  default     = 7
+  default     = 465
 
   validation {
     condition     = contains([7, 31, 62, 93, 124, 155, 186, 217, 248, 279, 310, 341, 372, 403, 434, 465, 496, 527, 558, 589, 620, 651, 682, 713, 731], var.performance_insights_retention_period)
