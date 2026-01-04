@@ -47,9 +47,3 @@ module "terraform_aws_elasticache" {
     }
   ]
 }
-
-# CloudWatch log group for slow-log
-resource "aws_cloudwatch_log_group" "elasticache_slow_log" {
-  name              = "/aws/elasticache/tfe-cache-001/slow-log"
-  retention_in_days = 30
-}

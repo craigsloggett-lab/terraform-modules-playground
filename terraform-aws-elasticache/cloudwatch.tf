@@ -1,4 +1,3 @@
-# CloudWatch log group for slow-log (if configured)
 resource "aws_cloudwatch_log_group" "slow_log" {
   count = length([for config in var.log_delivery_configuration : config if config.log_type == "slow-log"]) > 0 ? 1 : 0
 
@@ -11,7 +10,6 @@ resource "aws_cloudwatch_log_group" "slow_log" {
   }
 }
 
-# CloudWatch log group for engine-log (if configured)
 resource "aws_cloudwatch_log_group" "engine_log" {
   count = length([for config in var.log_delivery_configuration : config if config.log_type == "engine-log"]) > 0 ? 1 : 0
 
