@@ -1,0 +1,45 @@
+resource "aws_security_group" "rds" {
+  name        = local.security_group_name
+  description = "Security Group for RDS PostgreSQL instance: ${var.identifier}"
+  vpc_id      = data.aws_vpc.selected.id
+
+  tags = {
+    Name = local.security_group_name
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_vpc_security_group_ingress_rule" "rds_cidr" {
+  for_each = toset(var.allowed_cidr_blocks)
+
+  security_group_id = aws_security_group.rds.id
+  description       = "Allow DB traffic ingress to the RDS hosts from CIDR: ${each.value}"
+
+  cidr_ipv4   = each.value
+  ip_protocol = "tcp"
+  from_port   = 5432
+  to_port     = 5432
+}
+
+resource "aws_vpc_security_group_ingress_rule" "rds_sg" {
+  for_each = toset(var.allowed_security_group_ids)
+
+  security_group_id = aws_security_group.rds.id
+  description       = "Allow DB traffic ingress to the RDS hosts from security group: ${each.value}"
+
+  referenced_security_group_id = each.value
+  ip_protocol                  = "tcp"
+  from_port                    = 5432
+  to_port                      = 5432
+}
+
+resource "aws_vpc_security_group_egress_rule" "rds" {
+  security_group_id = aws_security_group.rds.id
+  description       = "Allow all outbound traffic from the RDS hosts."
+
+  cidr_ipv4   = "0.0.0.0/0"
+  ip_protocol = "-1"
+}
