@@ -27,9 +27,11 @@ module "terraform_aws_rds_postgres" {
   database_name = "tfe"
   username      = "tfeadmin"
 
-  postgres_version        = "17.7"
-  allowed_cidr_blocks     = [data.aws_vpc.rds.cidr_block]
-  backup_retention_period = 0
-  deletion_protection     = false
-  skip_final_snapshot     = true
+  postgres_version                      = "17.7"
+  allowed_cidr_blocks                   = [data.aws_vpc.rds.cidr_block]
+  backup_retention_period               = 0
+  deletion_protection                   = false
+  skip_final_snapshot                   = true
+  database_insights_mode                = "advanced"
+  performance_insights_retention_period = 465
 }
