@@ -208,17 +208,6 @@ variable "apply_immediately" {
 
 # Monitoring and Logging
 
-variable "log_delivery_configuration" {
-  description = "Log delivery configuration for slow-log and engine-log."
-  type = list(object({
-    destination      = string
-    destination_type = string
-    log_format       = string
-    log_type         = string
-  }))
-  default = []
-}
-
 variable "cloudwatch_logs_retention_days" {
   description = "The number of days to retain CloudWatch logs. Only used if log delivery is configured."
   type        = number

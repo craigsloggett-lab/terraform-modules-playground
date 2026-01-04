@@ -36,14 +36,4 @@ module "terraform_aws_elasticache" {
 
   snapshot_retention_limit = 7
   auth_token_enabled       = true
-
-  # Example with log delivery
-  log_delivery_configuration = [
-    {
-      destination      = aws_cloudwatch_log_group.elasticache_slow_log.name
-      destination_type = "cloudwatch-logs"
-      log_format       = "json"
-      log_type         = "slow-log"
-    }
-  ]
 }

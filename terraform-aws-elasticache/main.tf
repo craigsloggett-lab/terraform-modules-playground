@@ -84,14 +84,17 @@ resource "aws_elasticache_replication_group" "this" {
   parameter_group_name = length(var.parameters) > 0 ? aws_elasticache_parameter_group.this[0].name : null
 
   # Log Delivery Configuration
-  dynamic "log_delivery_configuration" {
-    for_each = var.log_delivery_configuration
-    content {
-      destination      = log_delivery_configuration.value.destination
-      destination_type = log_delivery_configuration.value.destination_type
-      log_format       = log_delivery_configuration.value.log_format
-      log_type         = log_delivery_configuration.value.log_type
-    }
+  log_delivery_configuration {
+    destination      = aws_cloudwatch_log_group.slow_log.name
+    destination_type = "cloudwatch-logs"
+    log_format       = "json"
+    log_type         = "slow-log"
+  }
+  log_delivery_configuration {
+    destination      = aws_cloudwatch_log_group.engine_log.name
+    destination_type = "cloudwatch-logs"
+    log_format       = "json"
+    log_type         = "engine-log"
   }
 
   tags = {
