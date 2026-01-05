@@ -5,12 +5,14 @@
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.0 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 6.0 |
+| <a name="requirement_random"></a> [random](#requirement\_random) | >= 3.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 6.0 |
+| <a name="provider_random"></a> [random](#provider\_random) | >= 3.0 |
 
 ## Modules
 
@@ -29,10 +31,28 @@
 |------|------|
 | [aws_acm_certificate.tfe](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/acm_certificate) | resource |
 | [aws_acm_certificate_validation.tfe](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/acm_certificate_validation) | resource |
+| [aws_key_pair.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/key_pair) | resource |
 | [aws_route53_record.cert_validation_record](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route53_record) | resource |
 | [aws_route53_record.tfe](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route53_record) | resource |
+| [aws_ssm_parameter.postgresql_major_version](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
+| [aws_ssm_parameter.tfe_admin_token_url](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
+| [aws_ssm_parameter.tfe_database_host](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
+| [aws_ssm_parameter.tfe_database_name](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
+| [aws_ssm_parameter.tfe_database_password](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
+| [aws_ssm_parameter.tfe_database_user](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
+| [aws_ssm_parameter.tfe_encryption_password](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
+| [aws_ssm_parameter.tfe_hostname](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
+| [aws_ssm_parameter.tfe_license](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
+| [aws_ssm_parameter.tfe_object_storage_s3_bucket](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
+| [aws_ssm_parameter.tfe_object_storage_s3_region](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
+| [aws_ssm_parameter.tfe_redis_host](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
+| [aws_ssm_parameter.tfe_redis_password](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
+| [aws_ssm_parameter.tfe_version](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
+| [random_string.tfe_database_password](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string) | resource |
+| [random_string.tfe_encryption_password](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string) | resource |
 | [aws_ami.debian](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ami) | data source |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
+| [aws_kms_key.ssm](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/kms_key) | data source |
 | [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
 | [aws_route53_zone.tfe](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/route53_zone) | data source |
 | [aws_subnets.private_app](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/subnets) | data source |
@@ -59,17 +79,13 @@
 | <a name="input_instance_ami_id"></a> [instance\_ami\_id](#input\_instance\_ami\_id) | The AMI ID for TFE instances. If not provided, uses latest Debian 12. | `string` | `null` | no |
 | <a name="input_instance_type"></a> [instance\_type](#input\_instance\_type) | The EC2 instance type for TFE application servers. | `string` | `"t3.large"` | no |
 | <a name="input_name_prefix"></a> [name\_prefix](#input\_name\_prefix) | Prefix for resource names (e.g., 'tfe' or 'tfe-prod'). Used to generate consistent names across all resources. | `string` | n/a | yes |
-| <a name="input_private_app_subnet_ids"></a> [private\_app\_subnet\_ids](#input\_private\_app\_subnet\_ids) | List of existing private app subnet IDs for EC2 instances. If not provided, searches for subnets named *private-app* in the VPC. | `list(string)` | `null` | no |
-| <a name="input_private_data_subnet_ids"></a> [private\_data\_subnet\_ids](#input\_private\_data\_subnet\_ids) | List of existing private data subnet IDs for RDS/ElastiCache. If not provided, searches for subnets named *private-data* in the VPC. | `list(string)` | `null` | no |
-| <a name="input_public_subnet_ids"></a> [public\_subnet\_ids](#input\_public\_subnet\_ids) | List of existing public subnet IDs for the ALB. If not provided, searches for subnets named *public* in the VPC. | `list(string)` | `null` | no |
 | <a name="input_route53_zone_name"></a> [route53\_zone\_name](#input\_route53\_zone\_name) | The Route53 hosted zone name for TFE (e.g., 'example.com'). Must be an existing hosted zone. | `string` | n/a | yes |
 | <a name="input_skip_final_snapshot"></a> [skip\_final\_snapshot](#input\_skip\_final\_snapshot) | Skip final RDS snapshot on deletion. Set to true for non-production environments. | `bool` | `false` | no |
-| <a name="input_ssh_key_name"></a> [ssh\_key\_name](#input\_ssh\_key\_name) | The name of an existing EC2 key pair for SSH access to instances. If not provided, instances won't have SSH access. | `string` | `null` | no |
+| <a name="input_ssh_public_key"></a> [ssh\_public\_key](#input\_ssh\_public\_key) | The name of an existing EC2 key pair for SSH access to instances. If not provided, instances won't have SSH access. | `string` | n/a | yes |
 | <a name="input_tfe_license"></a> [tfe\_license](#input\_tfe\_license) | The TFE license string. | `string` | n/a | yes |
 | <a name="input_tfe_subdomain"></a> [tfe\_subdomain](#input\_tfe\_subdomain) | The subdomain for TFE (e.g., 'tfe'). If null, uses the root domain. Final hostname will be subdomain.zone\_name or just zone\_name. | `string` | `"tfe"` | no |
 | <a name="input_tfe_version"></a> [tfe\_version](#input\_tfe\_version) | The version of TFE to deploy (e.g., 'v202501-1'). | `string` | `"1.1.2"` | no |
 | <a name="input_user_data_script"></a> [user\_data\_script](#input\_user\_data\_script) | Custom user data script for TFE instances. If not provided, uses a default startup script. | `string` | `null` | no |
-| <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | The ID of an existing VPC to deploy TFE into. If not provided, creates a new VPC. | `string` | `null` | no |
 
 ## Outputs
 

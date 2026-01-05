@@ -1,33 +1,10 @@
-# S3 Bucket for TFE Object Storage
 module "s3_storage" {
   source  = "app.terraform.io/craigsloggett-lab/s3-bucket/aws"
   version = "1.0.0"
 
-  bucket_name        = local.s3_bucket_name
-  versioning_enabled = true
-
-  lifecycle_rules = [
-    {
-      id      = "expire-old-versions"
-      enabled = true
-
-      noncurrent_version_expiration_days = 90
-
-      noncurrent_version_transitions = [
-        {
-          days          = 30
-          storage_class = "STANDARD_IA"
-        }
-      ]
-    }
-  ]
-
-  force_destroy = var.force_destroy_s3
-
-  tags = local.common_tags
+  bucket_name = local.s3_bucket_name
 }
 
-# RDS PostgreSQL Database
 module "database" {
   source = "../../terraform-aws-rds-postgres"
 
@@ -36,20 +13,17 @@ module "database" {
   subnet_ids = data.aws_subnets.private_data.ids
 
   database_name = var.database_name
-  username      = var.database_username
 
-  instance_class    = var.database_instance_class
-  allocated_storage = var.database_allocated_storage
+  postgres_version                      = "17.7"
+  allowed_cidr_blocks                   = [data.aws_vpc.tfe.cidr_block]
+  backup_retention_period               = 0
+  deletion_protection                   = false
+  skip_final_snapshot                   = true
+  database_insights_mode                = "advanced"
+  performance_insights_retention_period = 465
 
-  allowed_cidr_blocks = var.create_vpc ? [module.vpc[0].vpc_cidr_block] : []
-
-  deletion_protection = var.enable_deletion_protection
-  skip_final_snapshot = var.skip_final_snapshot
-
-  tags = local.common_tags
 }
 
-# ElastiCache for Redis/Valkey
 module "cache" {
   source = "../../terraform-aws-elasticache"
 
@@ -57,19 +31,17 @@ module "cache" {
   vpc_id     = data.aws_vpc.tfe.id
   subnet_ids = data.aws_subnets.private_data.ids
 
-  engine    = var.cache_engine
-  node_type = var.cache_node_type
+  engine = var.cache_engine
 
   num_cache_clusters         = 2
   automatic_failover_enabled = true
   multi_az_enabled           = true
 
-  allowed_cidr_blocks = var.create_vpc ? [module.vpc[0].vpc_cidr_block] : []
+  allowed_cidr_blocks = [data.aws_vpc.tfe.cidr_block]
 
-  tags = local.common_tags
+  snapshot_retention_limit = 7
 }
 
-# IAM Role and Instance Profile
 module "iam" {
   source = "../../terraform-aws-tfe-iam"
 
@@ -83,17 +55,9 @@ module "iam" {
 
   secrets_manager_secret_arns = [
     module.database.user_password_secret_arn,
-    module.cache.auth_token
   ]
-
-  enable_ec2_metadata_modification = true
-  enable_kms_access                = true
-  enable_cloudwatch_logs           = true
-
-  tags = local.common_tags
 }
 
-# Application Load Balancer
 module "alb" {
   source = "../../terraform-aws-alb"
 
@@ -124,22 +88,19 @@ module "alb" {
 
   allowed_cidr_blocks = var.allowed_cidr_blocks
 
-  tags = local.common_tags
-
   depends_on = [aws_acm_certificate_validation.tfe]
 }
 
-# Auto Scaling Group
 module "asg" {
   source = "../../terraform-aws-ec2-asg"
 
   identifier = var.name_prefix
   vpc_id     = data.aws_vpc.tfe.id
   subnet_ids = data.aws_subnets.private_app.ids
-  ami_id     = var.instance_ami_id != null ? var.instance_ami_id : data.aws_ami.debian.id
+  ami_id     = data.aws_ami.debian.id
 
   instance_type            = var.instance_type
-  key_name                 = var.ssh_key_name
+  aws_key_pair_name        = aws_key_pair.this.key_name
   iam_instance_profile_arn = module.iam.instance_profile_arn
   user_data                = var.user_data_script
 
@@ -165,19 +126,27 @@ module "asg" {
 
   ingress_rules = [
     {
-      description     = "HTTPS from ALB"
-      from_port       = 443
-      to_port         = 443
-      protocol        = "tcp"
-      security_groups = [module.alb.security_group_id]
+      description = "Allow HTTPS traffic ingress to the TFE Hosts from all networks."
+      cidr_ipv4   = "0.0.0.0/0"
+      ip_protocol = "tcp"
+      from_port   = 443
+      to_port     = 443
+    },
+    {
+      description = "Allow SSH traffic ingress to the TFE Hosts from private subnets."
+      cidr_ipv4   = "10.0.0.0/16"
+      ip_protocol = "tcp"
+      from_port   = 22
+      to_port     = 22
+    },
+    {
+      description = "Allow Vault traffic ingress to the TFE Hosts from private subnets."
+      cidr_ipv4   = "10.0.0.0/16"
+      ip_protocol = "tcp"
+      from_port   = 8201
+      to_port     = 8201
     }
   ]
-
-  tags = local.common_tags
-
-  instance_tags = {
-    Role = "TFE-Application-Server"
-  }
 
   depends_on = [
     module.database,

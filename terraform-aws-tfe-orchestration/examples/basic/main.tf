@@ -6,10 +6,6 @@ module "tfe" {
   tfe_subdomain     = "tfe"
   tfe_license       = var.tfe_license
 
-  # Create new VPC
-  create_vpc = true
-  vpc_cidr   = "10.0.0.0/16"
-
   # Database Configuration
   database_instance_class    = "db.t3.large"
   database_allocated_storage = 100
@@ -32,9 +28,5 @@ module "tfe" {
   skip_final_snapshot        = false
   force_destroy_s3           = false
 
-  tags = {
-    Environment = var.environment
-    ManagedBy   = "Terraform"
-    Project     = "TFE"
-  }
+  ssh_public_key = var.ssh_public_key
 }

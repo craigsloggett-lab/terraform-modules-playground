@@ -29,30 +29,6 @@ variable "tfe_subdomain" {
   }
 }
 
-variable "vpc_id" {
-  description = "The ID of an existing VPC to deploy TFE into. If not provided, creates a new VPC."
-  type        = string
-  default     = null
-}
-
-variable "public_subnet_ids" {
-  description = "List of existing public subnet IDs for the ALB. If not provided, searches for subnets named *public* in the VPC."
-  type        = list(string)
-  default     = null
-}
-
-variable "private_app_subnet_ids" {
-  description = "List of existing private app subnet IDs for EC2 instances. If not provided, searches for subnets named *private-app* in the VPC."
-  type        = list(string)
-  default     = null
-}
-
-variable "private_data_subnet_ids" {
-  description = "List of existing private data subnet IDs for RDS/ElastiCache. If not provided, searches for subnets named *private-data* in the VPC."
-  type        = list(string)
-  default     = null
-}
-
 variable "tfe_license" {
   description = "The TFE license string."
   type        = string
@@ -146,10 +122,9 @@ variable "asg_desired_capacity" {
   default     = null
 }
 
-variable "ssh_key_name" {
+variable "ssh_public_key" {
   description = "The name of an existing EC2 key pair for SSH access to instances. If not provided, instances won't have SSH access."
   type        = string
-  default     = null
 }
 
 variable "user_data_script" {

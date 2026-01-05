@@ -50,6 +50,10 @@ data "aws_subnets" "private_data" {
   }
 }
 
+data "aws_kms_key" "ssm" {
+  key_id = "alias/aws/ssm"
+}
+
 data "aws_ami" "debian" {
   most_recent = true
   owners      = ["136693071363"]
@@ -73,4 +77,18 @@ data "aws_ami" "debian" {
     name   = "architecture"
     values = ["x86_64"]
   }
+}
+
+# Create SSH key pair
+resource "aws_key_pair" "this" {
+  key_name   = "tfe-public-key"
+  public_key = var.ssh_public_key
+}
+
+resource "random_string" "tfe_encryption_password" {
+  length = 256
+}
+
+resource "random_string" "tfe_database_password" {
+  length = 64
 }
