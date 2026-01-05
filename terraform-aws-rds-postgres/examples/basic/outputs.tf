@@ -35,7 +35,7 @@ output "database_name" {
 
 output "username" {
   description = "The username for the database"
-  value       = module.terraform_aws_rds_postgres.username
+  value       = module.terraform_aws_rds_postgres.rds_instance_master_user
   sensitive   = true
 }
 
