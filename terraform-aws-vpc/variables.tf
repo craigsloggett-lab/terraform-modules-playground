@@ -15,7 +15,6 @@ variable "vpc_name" {
 variable "vpc_cidr" {
   description = "The CIDR block for the VPC. Must be /16 for automatic subnet calculation. Choose a CIDR that does not overlap with other VPCs you may peer with or on-premises networks."
   type        = string
-  default     = "10.0.0.0/16"
 
   validation {
     condition     = can(cidrhost(var.vpc_cidr, 0))
@@ -47,7 +46,6 @@ variable "vpc_cidr" {
 variable "number_of_azs" {
   description = "Number of Availability Zones to use. Must be at least 2 for high availability."
   type        = number
-  default     = 3
 
   validation {
     condition     = var.number_of_azs >= 2 && var.number_of_azs <= 6
@@ -95,7 +93,6 @@ variable "private_data_subnet_cidrs" {
 variable "create_database_subnet_groups" {
   description = "Whether to create database subnet groups. Recommended to set this to 'false' and create database subnet groups when creating a database."
   type        = bool
-  default     = false
 }
 
 # DNS
@@ -103,13 +100,11 @@ variable "create_database_subnet_groups" {
 variable "enable_dns_hostnames" {
   description = "Enable DNS hostnames in the VPC."
   type        = bool
-  default     = true
 }
 
 variable "enable_dns_support" {
   description = "Enable DNS support in the VPC."
   type        = bool
-  default     = true
 }
 
 # NAT Gateway Configuration
@@ -117,13 +112,11 @@ variable "enable_dns_support" {
 variable "enable_nat_gateway" {
   description = "Enable NAT Gateway for private subnet internet access. Required for private subnets to access the internet."
   type        = bool
-  default     = true
 }
 
 variable "single_nat_gateway" {
   description = "Use a single NAT Gateway for all private subnets (cost optimization) vs one per AZ (high availability)."
   type        = bool
-  default     = false
 
   validation {
     condition     = var.enable_nat_gateway || var.single_nat_gateway == false
@@ -139,7 +132,6 @@ variable "single_nat_gateway" {
 variable "one_nat_gateway_per_az" {
   description = "Create one NAT Gateway per Availability Zone for high availability."
   type        = bool
-  default     = true
 
   validation {
     condition     = var.enable_nat_gateway || var.one_nat_gateway_per_az == false
@@ -152,7 +144,6 @@ variable "one_nat_gateway_per_az" {
 variable "manage_default_network_acl" {
   description = "Manage the default network ACL. Set to false to leave it unmanaged."
   type        = bool
-  default     = true
 }
 
 variable "default_network_acl_ingress" {
@@ -204,13 +195,11 @@ variable "default_network_acl_egress" {
 variable "enable_flow_log" {
   description = "Enable VPC Flow Logs for network traffic analysis and security."
   type        = bool
-  default     = true
 }
 
 variable "flow_logs_retention_days" {
   description = "Number of days to retain VPC Flow Logs in CloudWatch."
   type        = number
-  default     = 30
 
   validation {
     condition     = contains([1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1096, 1827, 2192, 2557, 2922, 3288, 3653], var.flow_logs_retention_days)
@@ -221,7 +210,6 @@ variable "flow_logs_retention_days" {
 variable "flow_logs_traffic_type" {
   description = "The type of traffic to capture in flow logs. Valid values: ACCEPT, REJECT, ALL."
   type        = string
-  default     = "ALL"
 
   validation {
     condition     = contains(["ACCEPT", "REJECT", "ALL"], var.flow_logs_traffic_type)

@@ -2,6 +2,30 @@
 
 A Terraform module to deploy a VPC to an AWS account using sane defaults and automatic subnetting.
 
+## Input Defaults
+
+| Variable                      | Default                                                                                                          |
+| ----------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| vpc_cidr                      | `"10.0.0.0/16"`                                                                                                  |
+| number_of_azs                 | `3`                                                                                                              |
+| public_subnet_cidrs           | `null`                                                                                                           |
+| private_app_subnet_cidrs      | `null`                                                                                                           |
+| private_data_subnet_cidrs     | `null`                                                                                                           |
+| create_database_subnet_groups | `false`                                                                                                          |
+| enable_dns_hostnames          | `true`                                                                                                           |
+| enable_dns_support            | `true`                                                                                                           |
+| enable_nat_gateway            | `true`                                                                                                           |
+| single_nat_gateway            | `false`                                                                                                          |
+| one_nat_gateway_per_az        | `true`                                                                                                           |
+| manage_default_network_acl    | `true`                                                                                                           |
+| default_network_acl_ingress   | `[ { rule_no = 100, action = "allow", from_port = 0, to_port = 0, protocol = "-1", cidr_block = "0.0.0.0/0" } ]` |
+| default_network_acl_egress    | `[ { rule_no = 100, action = "allow", from_port = 0, to_port = 0, protocol = "-1", cidr_block = "0.0.0.0/0" } ]` |
+| enable_flow_log               | `true`                                                                                                           |
+| flow_logs_retention_days      | `30`                                                                                                             |
+| flow_logs_traffic_type        | `"ALL"`                                                                                                          |
+| waypoint_application          | `null`                                                                                                           |
+
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
@@ -42,23 +66,23 @@ A Terraform module to deploy a VPC to an AWS account using sane defaults and aut
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_create_database_subnet_groups"></a> [create\_database\_subnet\_groups](#input\_create\_database\_subnet\_groups) | Whether to create database subnet groups. Recommended to set this to 'false' and create database subnet groups when creating a database. | `bool` | `false` | no |
+| <a name="input_create_database_subnet_groups"></a> [create\_database\_subnet\_groups](#input\_create\_database\_subnet\_groups) | Whether to create database subnet groups. Recommended to set this to 'false' and create database subnet groups when creating a database. | `bool` | n/a | yes |
 | <a name="input_default_network_acl_egress"></a> [default\_network\_acl\_egress](#input\_default\_network\_acl\_egress) | List of maps of egress rules for default network ACL. | <pre>list(object({<br/>    rule_no    = number<br/>    action     = string<br/>    from_port  = number<br/>    to_port    = number<br/>    protocol   = string<br/>    cidr_block = string<br/>  }))</pre> | <pre>[<br/>  {<br/>    "action": "allow",<br/>    "cidr_block": "0.0.0.0/0",<br/>    "from_port": 0,<br/>    "protocol": "-1",<br/>    "rule_no": 100,<br/>    "to_port": 0<br/>  }<br/>]</pre> | no |
 | <a name="input_default_network_acl_ingress"></a> [default\_network\_acl\_ingress](#input\_default\_network\_acl\_ingress) | List of maps of ingress rules for default network ACL. | <pre>list(object({<br/>    rule_no    = number<br/>    action     = string<br/>    from_port  = number<br/>    to_port    = number<br/>    protocol   = string<br/>    cidr_block = string<br/>  }))</pre> | <pre>[<br/>  {<br/>    "action": "allow",<br/>    "cidr_block": "0.0.0.0/0",<br/>    "from_port": 0,<br/>    "protocol": "-1",<br/>    "rule_no": 100,<br/>    "to_port": 0<br/>  }<br/>]</pre> | no |
-| <a name="input_enable_dns_hostnames"></a> [enable\_dns\_hostnames](#input\_enable\_dns\_hostnames) | Enable DNS hostnames in the VPC. | `bool` | `true` | no |
-| <a name="input_enable_dns_support"></a> [enable\_dns\_support](#input\_enable\_dns\_support) | Enable DNS support in the VPC. | `bool` | `true` | no |
-| <a name="input_enable_flow_log"></a> [enable\_flow\_log](#input\_enable\_flow\_log) | Enable VPC Flow Logs for network traffic analysis and security. | `bool` | `true` | no |
-| <a name="input_enable_nat_gateway"></a> [enable\_nat\_gateway](#input\_enable\_nat\_gateway) | Enable NAT Gateway for private subnet internet access. Required for private subnets to access the internet. | `bool` | `true` | no |
-| <a name="input_flow_logs_retention_days"></a> [flow\_logs\_retention\_days](#input\_flow\_logs\_retention\_days) | Number of days to retain VPC Flow Logs in CloudWatch. | `number` | `30` | no |
-| <a name="input_flow_logs_traffic_type"></a> [flow\_logs\_traffic\_type](#input\_flow\_logs\_traffic\_type) | The type of traffic to capture in flow logs. Valid values: ACCEPT, REJECT, ALL. | `string` | `"ALL"` | no |
-| <a name="input_manage_default_network_acl"></a> [manage\_default\_network\_acl](#input\_manage\_default\_network\_acl) | Manage the default network ACL. Set to false to leave it unmanaged. | `bool` | `true` | no |
-| <a name="input_number_of_azs"></a> [number\_of\_azs](#input\_number\_of\_azs) | Number of Availability Zones to use. Must be at least 2 for high availability. | `number` | `3` | no |
-| <a name="input_one_nat_gateway_per_az"></a> [one\_nat\_gateway\_per\_az](#input\_one\_nat\_gateway\_per\_az) | Create one NAT Gateway per Availability Zone for high availability. | `bool` | `true` | no |
+| <a name="input_enable_dns_hostnames"></a> [enable\_dns\_hostnames](#input\_enable\_dns\_hostnames) | Enable DNS hostnames in the VPC. | `bool` | n/a | yes |
+| <a name="input_enable_dns_support"></a> [enable\_dns\_support](#input\_enable\_dns\_support) | Enable DNS support in the VPC. | `bool` | n/a | yes |
+| <a name="input_enable_flow_log"></a> [enable\_flow\_log](#input\_enable\_flow\_log) | Enable VPC Flow Logs for network traffic analysis and security. | `bool` | n/a | yes |
+| <a name="input_enable_nat_gateway"></a> [enable\_nat\_gateway](#input\_enable\_nat\_gateway) | Enable NAT Gateway for private subnet internet access. Required for private subnets to access the internet. | `bool` | n/a | yes |
+| <a name="input_flow_logs_retention_days"></a> [flow\_logs\_retention\_days](#input\_flow\_logs\_retention\_days) | Number of days to retain VPC Flow Logs in CloudWatch. | `number` | n/a | yes |
+| <a name="input_flow_logs_traffic_type"></a> [flow\_logs\_traffic\_type](#input\_flow\_logs\_traffic\_type) | The type of traffic to capture in flow logs. Valid values: ACCEPT, REJECT, ALL. | `string` | n/a | yes |
+| <a name="input_manage_default_network_acl"></a> [manage\_default\_network\_acl](#input\_manage\_default\_network\_acl) | Manage the default network ACL. Set to false to leave it unmanaged. | `bool` | n/a | yes |
+| <a name="input_number_of_azs"></a> [number\_of\_azs](#input\_number\_of\_azs) | Number of Availability Zones to use. Must be at least 2 for high availability. | `number` | n/a | yes |
+| <a name="input_one_nat_gateway_per_az"></a> [one\_nat\_gateway\_per\_az](#input\_one\_nat\_gateway\_per\_az) | Create one NAT Gateway per Availability Zone for high availability. | `bool` | n/a | yes |
 | <a name="input_private_app_subnet_cidrs"></a> [private\_app\_subnet\_cidrs](#input\_private\_app\_subnet\_cidrs) | List of CIDR blocks for private application subnets. If not provided, will be calculated automatically from VPC CIDR. | `list(string)` | `null` | no |
 | <a name="input_private_data_subnet_cidrs"></a> [private\_data\_subnet\_cidrs](#input\_private\_data\_subnet\_cidrs) | List of CIDR blocks for private data subnets (databases, caches). If not provided, will be calculated automatically from VPC CIDR. | `list(string)` | `null` | no |
 | <a name="input_public_subnet_cidrs"></a> [public\_subnet\_cidrs](#input\_public\_subnet\_cidrs) | List of CIDR blocks for public subnets. If not provided, will be calculated automatically from VPC CIDR. | `list(string)` | `null` | no |
-| <a name="input_single_nat_gateway"></a> [single\_nat\_gateway](#input\_single\_nat\_gateway) | Use a single NAT Gateway for all private subnets (cost optimization) vs one per AZ (high availability). | `bool` | `false` | no |
-| <a name="input_vpc_cidr"></a> [vpc\_cidr](#input\_vpc\_cidr) | The CIDR block for the VPC. Must be /16 for automatic subnet calculation. Choose a CIDR that does not overlap with other VPCs you may peer with or on-premises networks. | `string` | `"10.0.0.0/16"` | no |
+| <a name="input_single_nat_gateway"></a> [single\_nat\_gateway](#input\_single\_nat\_gateway) | Use a single NAT Gateway for all private subnets (cost optimization) vs one per AZ (high availability). | `bool` | n/a | yes |
+| <a name="input_vpc_cidr"></a> [vpc\_cidr](#input\_vpc\_cidr) | The CIDR block for the VPC. Must be /16 for automatic subnet calculation. Choose a CIDR that does not overlap with other VPCs you may peer with or on-premises networks. | `string` | n/a | yes |
 | <a name="input_vpc_name"></a> [vpc\_name](#input\_vpc\_name) | The name of the VPC. This will be used in the Name tag and subnet naming. | `string` | n/a | yes |
 | <a name="input_waypoint_application"></a> [waypoint\_application](#input\_waypoint\_application) | The Waypoint Application name injected during a Waypoint application deployment. | `string` | `null` | no |
 
