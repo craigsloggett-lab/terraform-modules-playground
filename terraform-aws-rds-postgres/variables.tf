@@ -42,7 +42,7 @@ variable "rds_instance_master_user" {
   default     = "dbadmin"
 
   validation {
-    condition     = var.username != "postgres" && can(regex("^[a-zA-Z][a-zA-Z0-9_]*$", var.username))
+    condition     = var.rds_instance_master_user != "postgres" && can(regex("^[a-zA-Z][a-zA-Z0-9_]*$", var.rds_instance_master_user))
     error_message = "Username cannot be 'postgres', must begin with a letter, and contain only alphanumeric characters and underscores."
   }
 }
