@@ -1,14 +1,29 @@
-output "aws_caller_identity" {
-  description = "The AWS caller identity data source."
-  value       = module.terraform_aws_tfe_iam.aws_caller_identity
+output "role_name" {
+  description = "The name of the IAM role"
+  value       = module.terraform_aws_tfe_iam.role_name
 }
 
-output "aws_region" {
-  description = "The AWS region (current) data source."
-  value       = module.terraform_aws_tfe_iam.aws_region
+output "role_arn" {
+  description = "The ARN of the IAM role"
+  value       = module.terraform_aws_tfe_iam.role_arn
 }
 
-output "aws_availability_zones" {
-  description = "The AWS availability zones (available) data source."
-  value       = module.terraform_aws_tfe_iam.aws_availability_zones
+output "role_id" {
+  description = "The ID of the IAM role"
+  value       = module.terraform_aws_tfe_iam.role_id
+}
+
+output "instance_profile_name" {
+  description = "The name of the IAM instance profile"
+  value       = module.terraform_aws_tfe_iam.instance_profile_name
+}
+
+output "instance_profile_arn" {
+  description = "The ARN of the IAM instance profile"
+  value       = module.terraform_aws_tfe_iam.instance_profile_arn
+}
+
+output "instance_profile_id" {
+  description = "The ID of the IAM instance profile"
+  value       = module.terraform_aws_tfe_iam.instance_profile_id
 }

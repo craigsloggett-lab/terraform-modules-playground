@@ -1,14 +1,29 @@
-output "aws_caller_identity" {
-  description = "The AWS caller identity data source."
-  value       = data.aws_caller_identity.current
+output "role_name" {
+  description = "The name of the IAM role"
+  value       = aws_iam_role.tfe.name
 }
 
-output "aws_region" {
-  description = "The AWS region (current) data source."
-  value       = data.aws_region.current
+output "role_arn" {
+  description = "The ARN of the IAM role"
+  value       = aws_iam_role.tfe.arn
 }
 
-output "aws_availability_zones" {
-  description = "The AWS availability zones (available) data source."
-  value       = data.aws_availability_zones.available
+output "role_id" {
+  description = "The ID of the IAM role"
+  value       = aws_iam_role.tfe.id
+}
+
+output "instance_profile_name" {
+  description = "The name of the IAM instance profile"
+  value       = aws_iam_instance_profile.tfe.name
+}
+
+output "instance_profile_arn" {
+  description = "The ARN of the IAM instance profile"
+  value       = aws_iam_instance_profile.tfe.arn
+}
+
+output "instance_profile_id" {
+  description = "The ID of the IAM instance profile"
+  value       = aws_iam_instance_profile.tfe.id
 }
