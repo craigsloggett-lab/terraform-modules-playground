@@ -228,3 +228,11 @@ variable "flow_logs_traffic_type" {
     error_message = "Flow logs traffic type must be one of: ACCEPT, REJECT, ALL."
   }
 }
+
+# Waypoint
+
+variable "waypoint_application" {
+  description = "The Waypoint Application name injected during a Waypoint application deployment."
+  type        = string
+  default     = null
+}

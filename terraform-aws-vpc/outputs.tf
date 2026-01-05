@@ -117,3 +117,8 @@ output "account_id" {
   description = "AWS account ID where the VPC is created"
   value       = local.account_id
 }
+
+output "waypoint_application" {
+  description = "The Waypoint Application name injected during a Waypoint application deployment."
+  value       = var.waypoint_application
+}

@@ -58,8 +58,9 @@ A Terraform module to deploy a VPC to an AWS account using sane defaults and aut
 | <a name="input_private_data_subnet_cidrs"></a> [private\_data\_subnet\_cidrs](#input\_private\_data\_subnet\_cidrs) | List of CIDR blocks for private data subnets (databases, caches). If not provided, will be calculated automatically from VPC CIDR. | `list(string)` | `null` | no |
 | <a name="input_public_subnet_cidrs"></a> [public\_subnet\_cidrs](#input\_public\_subnet\_cidrs) | List of CIDR blocks for public subnets. If not provided, will be calculated automatically from VPC CIDR. | `list(string)` | `null` | no |
 | <a name="input_single_nat_gateway"></a> [single\_nat\_gateway](#input\_single\_nat\_gateway) | Use a single NAT Gateway for all private subnets (cost optimization) vs one per AZ (high availability). | `bool` | `false` | no |
-| <a name="input_vpc_cidr"></a> [vpc\_cidr](#input\_vpc\_cidr) | The CIDR block for the VPC. Must be /16 for automatic subnet calculation.<br/><br/>Choose a CIDR that:<br/>- Does not overlap with other VPCs you may peer with<br/>- Does not overlap with on-premises networks<br/>- Follows your organization's IP allocation scheme<br/><br/>Common choices:<br/>- 10.0.0.0/16 to 10.255.0.0/16<br/>- 172.16.0.0/16 to 172.31.0.0/16<br/>- 192.168.0.0/16 | `string` | `"10.0.0.0/16"` | no |
+| <a name="input_vpc_cidr"></a> [vpc\_cidr](#input\_vpc\_cidr) | The CIDR block for the VPC. Must be /16 for automatic subnet calculation. Choose a CIDR that does not overlap with other VPCs you may peer with or on-premises networks. | `string` | `"10.0.0.0/16"` | no |
 | <a name="input_vpc_name"></a> [vpc\_name](#input\_vpc\_name) | The name of the VPC. This will be used in the Name tag and subnet naming. | `string` | n/a | yes |
+| <a name="input_waypoint_application"></a> [waypoint\_application](#input\_waypoint\_application) | The Waypoint Application name injected during a Waypoint application deployment. | `string` | `null` | no |
 
 ## Outputs
 
@@ -70,7 +71,7 @@ A Terraform module to deploy a VPC to an AWS account using sane defaults and aut
 | <a name="output_database_route_table_ids"></a> [database\_route\_table\_ids](#output\_database\_route\_table\_ids) | List of IDs of database route tables |
 | <a name="output_database_subnet_group_name"></a> [database\_subnet\_group\_name](#output\_database\_subnet\_group\_name) | Name of database subnet group (for RDS) |
 | <a name="output_dynamodb_vpc_endpoint_id"></a> [dynamodb\_vpc\_endpoint\_id](#output\_dynamodb\_vpc\_endpoint\_id) | ID of the DynamoDB VPC endpoint |
-| <a name="output_flow_log_cloudwatch_log_group_name"></a> [flow\_log\_cloudwatch\_log\_group\_name](#output\_flow\_log\_cloudwatch\_log\_group\_name) | Name of the CloudWatch Log Group for VPC Flow Logs |
+| <a name="output_flow_log_cloudwatch_iam_role_arn"></a> [flow\_log\_cloudwatch\_iam\_role\_arn](#output\_flow\_log\_cloudwatch\_iam\_role\_arn) | The ARN of the IAM role used when pushing logs to Cloudwatch log group. |
 | <a name="output_flow_log_id"></a> [flow\_log\_id](#output\_flow\_log\_id) | ID of the VPC Flow Log |
 | <a name="output_internet_gateway_id"></a> [internet\_gateway\_id](#output\_internet\_gateway\_id) | ID of the Internet Gateway |
 | <a name="output_nat_gateway_ids"></a> [nat\_gateway\_ids](#output\_nat\_gateway\_ids) | List of NAT Gateway IDs |
@@ -89,4 +90,5 @@ A Terraform module to deploy a VPC to an AWS account using sane defaults and aut
 | <a name="output_vpc_cidr_block"></a> [vpc\_cidr\_block](#output\_vpc\_cidr\_block) | The CIDR block of the VPC |
 | <a name="output_vpc_id"></a> [vpc\_id](#output\_vpc\_id) | The ID of the VPC |
 | <a name="output_vpc_name"></a> [vpc\_name](#output\_vpc\_name) | The name of the VPC |
+| <a name="output_waypoint_application"></a> [waypoint\_application](#output\_waypoint\_application) | The Waypoint Application name injected during a Waypoint application deployment. |
 <!-- END_TF_DOCS -->
