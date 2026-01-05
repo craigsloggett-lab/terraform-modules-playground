@@ -1,0 +1,5 @@
+# Copy this file to terraform.tfvars and fill in your values
+
+route53_zone_name = "example.com"
+tfe_license       = "your-tfe-license-here"
+environment       = "production"
