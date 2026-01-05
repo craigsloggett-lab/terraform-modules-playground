@@ -26,7 +26,6 @@ module "terraform_aws_elasticache" {
 
   engine         = "valkey"
   engine_version = "7.2"
-  node_type      = "cache.t3.medium"
 
   num_cache_clusters         = 2
   automatic_failover_enabled = true
@@ -35,5 +34,4 @@ module "terraform_aws_elasticache" {
   allowed_cidr_blocks = [data.aws_vpc.elasticache.cidr_block]
 
   snapshot_retention_limit = 7
-  auth_token_enabled       = true
 }

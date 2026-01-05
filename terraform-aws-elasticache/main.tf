@@ -1,7 +1,5 @@
 # Generate auth token if not provided and auth is enabled
 resource "random_password" "auth_token" {
-  count = var.auth_token_enabled && var.auth_token == null ? 1 : 0
-
   length  = 32
   special = true
   # ElastiCache auth token has specific character requirements
@@ -18,40 +16,16 @@ resource "aws_elasticache_subnet_group" "this" {
   }
 }
 
-# Cache Parameter Group
-resource "aws_elasticache_parameter_group" "this" {
-  count = length(var.parameters) > 0 ? 1 : 0
-
-  name   = local.parameter_group_name
-  family = local.parameter_group_family
-
-  dynamic "parameter" {
-    for_each = var.parameters
-    content {
-      name  = parameter.value.name
-      value = parameter.value.value
-    }
-  }
-
-  tags = {
-    Name = local.parameter_group_name
-  }
-
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
 # ElastiCache Replication Group
 resource "aws_elasticache_replication_group" "this" {
   replication_group_id = local.replication_group_id
-  description          = var.description != null ? var.description : "${var.engine} cache cluster for ${var.identifier}"
+  description          = local.replication_group_description
 
   # Engine Configuration
   engine         = var.engine
   engine_version = var.engine_version
   node_type      = var.node_type
-  port           = local.port
+  port           = 6379
 
   # Cluster Configuration
   num_cache_clusters         = local.cluster_mode_enabled ? null : var.num_cache_clusters
@@ -65,11 +39,10 @@ resource "aws_elasticache_replication_group" "this" {
   security_group_ids = [aws_security_group.elasticache.id]
 
   # Security
-  at_rest_encryption_enabled = var.at_rest_encryption_enabled
-  kms_key_id                 = var.at_rest_encryption_enabled ? data.aws_kms_key.elasticache.arn : null
-  transit_encryption_enabled = var.transit_encryption_enabled
-  auth_token                 = var.auth_token_enabled ? coalesce(var.auth_token, try(random_password.auth_token[0].result, null)) : null
-  auth_token_update_strategy = var.auth_token_enabled ? "ROTATE" : null
+  at_rest_encryption_enabled = true
+  transit_encryption_enabled = true
+  auth_token                 = random_password.auth_token.result
+  auth_token_update_strategy = "SET"
 
   # Backup Configuration
   snapshot_retention_limit = var.snapshot_retention_limit
@@ -81,7 +54,7 @@ resource "aws_elasticache_replication_group" "this" {
   apply_immediately          = var.apply_immediately
 
   # Parameter Group
-  parameter_group_name = length(var.parameters) > 0 ? aws_elasticache_parameter_group.this[0].name : null
+  parameter_group_name = local.parameter_group_name
 
   # Log Delivery Configuration
   log_delivery_configuration {

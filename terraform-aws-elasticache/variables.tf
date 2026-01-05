@@ -106,46 +106,6 @@ variable "multi_az_enabled" {
 
 # Security
 
-variable "at_rest_encryption_enabled" {
-  description = "Enable encryption at rest. Cannot be disabled for compliance."
-  type        = bool
-  default     = true
-
-  validation {
-    condition     = var.at_rest_encryption_enabled == true
-    error_message = "Encryption at rest is required for compliance and cannot be disabled."
-  }
-}
-
-variable "transit_encryption_enabled" {
-  description = "Enable encryption in transit (TLS). Cannot be disabled for compliance."
-  type        = bool
-  default     = true
-
-  validation {
-    condition     = var.transit_encryption_enabled == true
-    error_message = "Encryption in transit is required for compliance and cannot be disabled."
-  }
-}
-
-variable "auth_token_enabled" {
-  description = "Enable Redis AUTH token for authentication. Recommended for production."
-  type        = bool
-  default     = true
-}
-
-variable "auth_token" {
-  description = "The password used to access the cache. Required if auth_token_enabled is true. If not provided, one will be generated. Must be 16-128 characters."
-  type        = string
-  default     = null
-  sensitive   = true
-
-  validation {
-    condition     = var.auth_token == null || (length(var.auth_token) >= 16 && length(var.auth_token) <= 128)
-    error_message = "Auth token must be between 16 and 128 characters if provided."
-  }
-}
-
 variable "allowed_cidr_blocks" {
   description = "List of CIDR blocks allowed to access the cache. Should typically be your VPC CIDR or application subnet CIDRs."
   type        = list(string)
@@ -161,12 +121,6 @@ variable "allowed_security_group_ids" {
   description = "List of security group IDs allowed to access the cache (e.g., application server security groups)."
   type        = list(string)
   default     = []
-}
-
-variable "elasticache_kms_key_id" {
-  description = "The ARN of the KMS key for encryption at rest. If not specified, uses the default aws/elasticache key."
-  type        = string
-  default     = null
 }
 
 # Backup and Maintenance
@@ -219,33 +173,16 @@ variable "cloudwatch_logs_retention_days" {
   }
 }
 
-# Parameter Group
-
-variable "parameter_group_name" {
-  description = "Name of the parameter group. If not provided, defaults to '{identifier}-pg'."
-  type        = string
-  default     = null
-}
-
-variable "parameters" {
-  description = "List of parameters to apply to the cache cluster."
-  type = list(object({
-    name  = string
-    value = string
-  }))
-  default = []
-}
-
 # Naming
-
-variable "replication_group_id" {
-  description = "The replication group identifier. If not provided, uses the identifier variable."
-  type        = string
-  default     = null
-}
 
 variable "description" {
   description = "Description for the replication group."
+  type        = string
+  default     = null
+}
+
+variable "replication_group_id" {
+  description = "The replication group identifier. If not provided, uses the identifier variable."
   type        = string
   default     = null
 }

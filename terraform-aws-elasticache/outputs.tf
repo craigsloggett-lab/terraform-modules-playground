@@ -25,12 +25,12 @@ output "configuration_endpoint_address" {
 
 output "port" {
   description = "The port number on which the cache accepts connections"
-  value       = local.port
+  value       = try(aws_elasticache_replication_group.this.port, null)
 }
 
 output "auth_token" {
   description = "The auth token for the cache cluster"
-  value       = var.auth_token_enabled ? coalesce(var.auth_token, try(random_password.auth_token[0].result, null)) : null
+  value       = random_password.auth_token.result
   sensitive   = true
 }
 
@@ -51,7 +51,7 @@ output "subnet_group_name" {
 
 output "parameter_group_name" {
   description = "The name of the parameter group"
-  value       = length(var.parameters) > 0 ? aws_elasticache_parameter_group.this[0].name : null
+  value       = try(aws_elasticache_replication_group.this.parameter_group_name, null)
 }
 
 output "engine" {

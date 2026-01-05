@@ -4,18 +4,13 @@ locals {
 
   # Determine parameter group family based on engine
   parameter_group_family = var.engine == "redis" ? "redis${local.engine_major_version}" : "valkey${local.engine_major_version}"
+  parameter_group_name   = local.cluster_mode_enabled ? "default.${local.parameter_group_family}.cluster.on" : "default.${local.parameter_group_family}"
 
   # Resource naming with defaults
-  replication_group_id = var.replication_group_id != null ? var.replication_group_id : var.identifier
-  parameter_group_name = var.parameter_group_name != null ? var.parameter_group_name : "${var.identifier}-pg"
-  security_group_name  = var.security_group_name != null ? var.security_group_name : "${var.identifier}-sg"
-  subnet_group_name    = var.subnet_group_name != null ? var.subnet_group_name : "${var.identifier}-subnet-group"
-
-  # KMS key for encryption
-  elasticache_kms_key_id = var.elasticache_kms_key_id != null ? var.elasticache_kms_key_id : "alias/aws/elasticache"
-
-  # Port based on engine (Redis and Valkey both use 6379)
-  port = 6379
+  replication_group_id          = var.replication_group_id != null ? var.replication_group_id : var.identifier
+  replication_group_description = var.description != null ? var.description : "${var.engine} cache cluster for ${var.identifier}"
+  subnet_group_name             = var.subnet_group_name != null ? var.subnet_group_name : "${var.identifier}-subnet-group"
+  security_group_name           = var.security_group_name != null ? var.security_group_name : "${var.identifier}-sg"
 
   # Determine if using cluster mode
   cluster_mode_enabled = var.num_node_groups > 1 || var.replicas_per_node_group > 0
