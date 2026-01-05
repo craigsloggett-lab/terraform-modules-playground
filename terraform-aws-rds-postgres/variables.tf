@@ -36,8 +36,8 @@ variable "database_name" {
   }
 }
 
-variable "username" {
-  description = "Username for the DB user. Cannot be 'postgres' as it's reserved."
+variable "rds_instance_master_user" {
+  description = "Username for the master DB user. Cannot be 'postgres' as it's reserved."
   type        = string
   default     = "dbadmin"
 

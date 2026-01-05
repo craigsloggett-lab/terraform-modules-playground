@@ -25,7 +25,6 @@ module "terraform_aws_rds_postgres" {
   subnet_ids = data.aws_subnets.private.ids
 
   database_name = "tfe"
-  username      = "tfeadmin"
 
   postgres_version                      = "17.7"
   allowed_cidr_blocks                   = [data.aws_vpc.rds.cidr_block]

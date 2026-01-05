@@ -39,7 +39,7 @@ resource "aws_db_instance" "this" {
 
   # Database Configuration
   db_name  = var.database_name
-  username = var.username
+  username = var.rds_instance_master_user
 
   # Network Configuration
   db_subnet_group_name   = aws_db_subnet_group.this.name

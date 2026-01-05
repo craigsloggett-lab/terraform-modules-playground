@@ -33,8 +33,8 @@ output "database_name" {
   value       = aws_db_instance.this.db_name
 }
 
-output "username" {
-  description = "The username for the database"
+output "rds_instance_master_user" {
+  description = "The master user for the database"
   value       = aws_db_instance.this.username
   sensitive   = true
 }
