@@ -1,19 +1,19 @@
-output "aws_caller_identity" {
-  description = "The AWS caller identity data source."
-  value       = module.terraform_aws_ec2_asg.aws_caller_identity
+output "launch_template_id" {
+  description = "The ID of the launch template"
+  value       = module.terraform_aws_ec2_asg.launch_template_id
 }
 
-output "aws_region" {
-  description = "The AWS region (current) data source."
-  value       = module.terraform_aws_ec2_asg.aws_region
+output "autoscaling_group_name" {
+  description = "The name of the Auto Scaling Group"
+  value       = module.terraform_aws_ec2_asg.autoscaling_group_name
 }
 
-output "aws_availability_zones" {
-  description = "The AWS availability zones (available) data source."
-  value       = module.terraform_aws_ec2_asg.aws_availability_zones
+output "autoscaling_group_arn" {
+  description = "The ARN of the Auto Scaling Group"
+  value       = module.terraform_aws_ec2_asg.autoscaling_group_arn
 }
 
-output "aws_ami" {
-  description = "The details of the AMI image."
-  value       = module.terraform_aws_ec2_asg.aws_ami
+output "security_group_id" {
+  description = "The ID of the instance security group"
+  value       = module.terraform_aws_ec2_asg.security_group_id
 }
