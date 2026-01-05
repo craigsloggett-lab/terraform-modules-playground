@@ -1,1 +1,0 @@
-# terraform-aws-ssm-config
