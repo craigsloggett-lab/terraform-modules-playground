@@ -25,7 +25,7 @@ resource "aws_elasticache_replication_group" "this" {
   engine         = var.engine
   engine_version = var.engine_version
   node_type      = var.node_type
-  port           = 6379
+  port           = local.port
 
   # Cluster Configuration
   num_cache_clusters         = local.cluster_mode_enabled ? null : var.num_cache_clusters

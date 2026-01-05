@@ -2,6 +2,9 @@ locals {
   # Extract major version for parameter group family
   engine_major_version = split(".", var.engine_version)[0]
 
+  # Redis and Valkey both use the same port
+  port = 6379
+
   # Determine parameter group family based on engine
   parameter_group_family = var.engine == "redis" ? "redis${local.engine_major_version}" : "valkey${local.engine_major_version}"
   parameter_group_name   = local.cluster_mode_enabled ? "default.${local.parameter_group_family}.cluster.on" : "default.${local.parameter_group_family}"
