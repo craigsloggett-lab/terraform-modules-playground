@@ -1,14 +1,14 @@
-output "aws_caller_identity" {
-  description = "The AWS caller identity data source."
-  value       = module.terraform_aws_s3_bucket.aws_caller_identity
-}
-
 output "aws_region" {
   description = "The AWS region (current) data source."
   value       = module.terraform_aws_s3_bucket.aws_region
 }
 
-output "aws_availability_zones" {
-  description = "The AWS availability zones (available) data source."
-  value       = module.terraform_aws_s3_bucket.aws_availability_zones
+output "s3_bucket_name" {
+  description = "The name of the S3 bucket."
+  value       = module.terraform_aws_s3_bucket.s3_bucket_name
+}
+
+output "s3_bucket_arn" {
+  description = "The ARN of the S3 bucket."
+  value       = module.terraform_aws_s3_bucket.s3_bucket_arn
 }
